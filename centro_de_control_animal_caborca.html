@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<!-- Declare HTML5 document type and set language to Spanish with smooth anchor scrolling -->
+<html lang="es" class="scroll-smooth">
+<head>
+  <!-- Support standard UTF-8 characters (including accents like á, é, í, ó, ú, ñ) -->
+  <meta charset="UTF-8" />
+  <!-- Ensure proper scaling and responsive layout on phones, tablets, and desktops -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Browser tab title -->
+  <title>Centro de Control Animal Caborca</title>
+
+  <!-- Preconnect to Google Fonts domains so fonts load faster -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Load Playfair Display (for headings) and Inter (for body text and UI labels) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Load Tailwind CSS from CDN so we can style elements using utility classes -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Custom Tailwind configuration: define custom brand colors and font families -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#FAF6EE',       // Main warm cream background color
+            creamDark: '#F2ECE1',   // Slightly deeper cream for contact/map area
+            forest: '#265345',      // Primary forest green for headings & buttons
+            forestDark: '#1D4035',  // Darker forest green for hover states
+            maroon: '#7A003C',      // Brand maroon for badges, labels & donation box
+            maroonDark: '#5E002E',  // Darker maroon for hover states
+            burgundy: '#3B001E',    // Deep burgundy for fee table & footer
+            ink: '#2A1822',         // Dark ink color for readable body text
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'], // Heading font
+            sans: ['Inter', 'system-ui', 'sans-serif'],        // Body font
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Custom CSS rules that supplement Tailwind -->
+  <style>
+    /* Set default page background, text color, and font */
+    body {
+      background-color: #FAF6EE;
+      color: #2A1822;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    /* Soft drop shadow applied to cards for depth */
+    .soft-card {
+      box-shadow: 0 10px 30px -10px rgba(42, 24, 34, 0.08);
+    }
+
+    /* Highlight ring and slight lift when a donation tier card is clicked */
+    .tier-card.selected {
+      outline: 3px solid #FFD166;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<!-- antialiased smooths text rendering; selection:* sets highlight color when selecting text -->
+<body class="antialiased selection:bg-maroon selection:text-white">
+
+  <!-- =========================================================
+       1. STICKY / TOP NAVBAR
+       Stays pinned near the top of the screen while scrolling
+  ========================================================== -->
+  <header class="sticky top-0 z-50 bg-cream/95 backdrop-blur-md border-b border-black/5">
+    <!-- Centered container with horizontal padding -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Flex row keeping brand on left and navigation/menu button on right -->
+      <div class="flex items-center justify-between h-20">
+        <!-- Left Logo: stacked small uppercase label above large serif title -->
+        <a href="#" class="flex flex-col leading-tight group">
+          <span class="text-[11px] font-semibold tracking-[0.12em] uppercase text-maroon">
+            CENTRO DE CONTROL ANIMAL
+          </span>
+          <span class="font-serif text-2xl font-extrabold text-forest group-hover:text-maroon transition-colors">
+            Caborca
+          </span>
+        </a>
+
+        <!-- Desktop Navigation links (hidden on small screens, shown from md: and up) -->
+        <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-ink">
+          <a href="#nosotros" class="hover:text-maroon transition-colors">Nosotros</a>
+          <a href="#adopta" class="hover:text-maroon transition-colors">Adopta</a>
+          <a href="#servicios" class="hover:text-maroon transition-colors">Servicios</a>
+          <a href="#noticias" class="hover:text-maroon transition-colors">Noticias</a>
+          <a href="#dona" class="hover:text-maroon transition-colors">Dona</a>
+          <a href="#contacto" class="hover:text-maroon transition-colors">Contacto</a>
+        </nav>
+
+        <!-- Mobile Hamburger Button (shown only on small screens below md:) -->
+        <button
+          id="mobileMenuBtn"
+          type="button"
+          aria-label="Abrir menú"
+          class="md:hidden p-2 rounded-lg text-ink hover:bg-creamDark focus:outline-none focus:ring-2 focus:ring-maroon"
+        >
+          <!-- Hamburger icon SVG -->
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Menu (toggled open/closed via JavaScript) -->
+    <div id="mobileMenu" class="hidden md:hidden bg-cream border-t border-black/5 px-4 py-4 space-y-3">
+      <a href="#nosotros" class="mobile-link block py-2 text-base font-medium text-ink hover:text-maroon">Nosotros</a>
+      <a href="#adopta" class="mobile-link block py-2 text-base font-medium text-ink hover:text-maroon">Adopta</a>
+      <a href="#servicios" class="mobile-link block py-2 text-base font-medium text-ink hover:text-maroon">Servicios</a>
+      <a href="#noticias" class="mobile-link block py-2 text-base font-medium text-ink hover:text-maroon">Noticias</a>
+      <a href="#dona" class="mobile-link block py-2 text-base font-medium text-ink hover:text-maroon">Dona</a>
+      <a href="#contacto" class="mobile-link block py-2 text-base font-medium text-ink hover:text-maroon">Contacto</a>
+    </div>
+  </header>
+
+  <!-- =========================================================
+       2. HERO SECTION
+       Full-width banner with photo, color overlay, headline & CTA buttons
+  ========================================================== -->
+  <section class="relative w-full min-h-[540px] lg:min-h-[620px] flex items-center overflow-hidden bg-forestDark">
+    <!-- Background Image: replace src="..." with your own photo URL or local image path -->
+    <img
+      src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=1600&q=80"
+      onerror="this.onerror=null;this.src='https://placehold.co/1600x900/3F4E3A/FFFFFF?text=Centro+de+Control+Animal+Caborca';"
+      alt="Perro esperando adopción en Caborca, Sonora"
+      class="absolute inset-0 w-full h-full object-cover object-center"
+    />
+    <!-- Semi-transparent gradient overlay so white text remains easy to read over the image -->
+    <div class="absolute inset-0 bg-gradient-to-r from-[#223529]/90 via-[#384B36]/75 to-[#1D2D23]/55"></div>
+
+    <!-- Hero foreground content -->
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
+      <div class="max-w-2xl">
+        <!-- Location pill badge -->
+        <span class="inline-block bg-maroon text-white text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full mb-6 shadow-sm">
+          Caborca, Sonora · Piensa en Grande
+        </span>
+
+        <!-- Main page headline -->
+        <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-[1.08] tracking-tight mb-6">
+          Dales una segunda oportunidad.
+        </h1>
+
+        <!-- Supporting subtitle -->
+        <p class="text-white/90 text-base sm:text-lg leading-relaxed mb-8 max-w-xl">
+          Cada perro de nuestro centro espera un hogar lleno de amor. Adopta, dona o ayúdanos a difundir.
+        </p>
+
+        <!-- Primary & secondary call-to-action buttons -->
+        <div class="flex flex-wrap items-center gap-4">
+          <a
+            href="#adopta"
+            class="inline-flex items-center justify-center bg-maroon hover:bg-maroonDark text-white font-semibold px-7 py-3.5 rounded-full transition-all shadow-md hover:shadow-lg"
+          >
+            Ver perros en adopción
+          </a>
+          <a
+            href="#dona"
+            class="inline-flex items-center justify-center border border-white/80 hover:bg-white hover:text-forestDark text-white font-semibold px-7 py-3.5 rounded-full transition-all"
+          >
+            Quiero donar
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       3. SOBRE NOSOTROS (#nosotros)
+       About the shelter, photo, mission text, and impact stats
+  ========================================================== -->
+  <section id="nosotros" class="bg-cream py-20 lg:py-28">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- 12-column responsive grid: 5 cols left on desktop, 7 cols right -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- Left Column: Section heading + shelter/mobile unit photo -->
+        <div class="lg:col-span-5 space-y-6">
+          <div>
+            <p class="text-xs font-bold tracking-[0.14em] uppercase text-maroon mb-2">
+              SOBRE NOSOTROS
+            </p>
+            <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-extrabold text-forest leading-tight">
+              Cuidamos a los animales de Caborca
+            </h2>
+          </div>
+          <!-- Image card for Sobre Nosotros: replace src="..." to customize -->
+          <div class="rounded-3xl overflow-hidden soft-card border border-black/5 bg-white">
+            <img
+              src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=900&q=80"
+              onerror="this.onerror=null;this.src='https://placehold.co/700x460/E6DFD1/265345?text=Equipo+%2F+Unidad+M%C3%B3vil';"
+              alt="Equipo y Unidad Móvil Veterinaria de Caborca"
+              class="w-full h-60 sm:h-64 object-cover"
+            />
+          </div>
+        </div>
+
+        <!-- Right Column: Shelter paragraphs + 3 statistic cards -->
+        <div class="lg:col-span-7 space-y-6">
+          <p class="text-ink/85 text-base sm:text-lg leading-relaxed">
+            Somos el Centro de Control Animal del Ayuntamiento de Caborca. Rescatamos, atendemos y buscamos hogar para perros en situación de calle.
+          </p>
+          <p class="text-ink/85 text-base sm:text-lg leading-relaxed">
+            Con nuestra Unidad Móvil Veterinaria llevamos campañas de esterilización gratuita, vacunación y tratamiento contra garrapatas a colonias y ejidos.
+          </p>
+
+          <!-- 3-column stat cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+            <!-- Stat 1 -->
+            <div class="bg-white rounded-2xl p-6 text-center soft-card border border-black/5">
+              <div class="font-serif text-3xl font-extrabold text-burgundy mb-1">+500</div>
+              <div class="text-xs font-medium text-ink/70">Esterilizaciones</div>
+            </div>
+            <!-- Stat 2 -->
+            <div class="bg-white rounded-2xl p-6 text-center soft-card border border-black/5">
+              <div class="font-serif text-3xl font-extrabold text-burgundy mb-1">+120</div>
+              <div class="text-xs font-medium text-ink/70">Adopciones</div>
+            </div>
+            <!-- Stat 3 -->
+            <div class="bg-white rounded-2xl p-6 text-center soft-card border border-black/5">
+              <div class="font-serif text-3xl font-extrabold text-burgundy mb-1">30+</div>
+              <div class="text-xs font-medium text-ink/70">Campañas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       4. GALERÍA DE ADOPCIÓN (#adopta) - 12 DOG PLACEHOLDERS
+       Cards are generated dynamically from the `dogs` array in <script>
+  ========================================================== -->
+  <section id="adopta" class="bg-cream py-20 border-t border-black/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Section Header -->
+      <div class="mb-12">
+        <p class="text-xs font-bold tracking-[0.14em] uppercase text-maroon mb-2">
+          GALERÍA DE ADOPCIÓN
+        </p>
+        <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-extrabold text-forest">
+          Buscan un hogar
+        </h2>
+      </div>
+
+      <!-- 3-Column Responsive Grid (12 dog cards injected here by JavaScript) -->
+      <div id="dogsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Dog cards will be injected here by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       5. SERVICIOS (#servicios)
+       Center fee schedule (1 to 10) + veterinary photo
+  ========================================================== -->
+  <section id="servicios" class="bg-cream py-20 lg:py-24 border-t border-black/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Section Header -->
+      <div class="mb-10">
+        <p class="text-xs font-bold tracking-[0.14em] uppercase text-maroon mb-2">
+          SERVICIOS
+        </p>
+        <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-extrabold text-forest">
+          Tarifas del centro
+        </h2>
+      </div>
+
+      <!-- Split layout: 8 cols price list on left, 4 cols image on right -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Dark Burgundy Rounded Table Card -->
+        <div class="lg:col-span-8 bg-burgundy text-white rounded-3xl overflow-hidden soft-card">
+          <!-- Subtle divider lines between each service row -->
+          <div class="divide-y divide-white/10">
+            <div class="flex items-center justify-between px-6 sm:px-8 py-4 hover:bg-white/5 transition-colors">
+              <span class="text-sm sm:text-base"><span class="text-white/50 mr-2">1.</span> Observación por agresión</span>
+              <span class="font-bold text-sm sm:text-base">$1,174</span>
+            </div>
+            <div class="flex items-center justify-between px-6 sm:px-8 py-4 hover:bg-white/5 transition-colors">
+              <span class="text-sm sm:text-base"><span class="text-white/50 mr-2">2.</span> Observación por agresión (reincidente)</span>
+              <span class="font-bold text-sm sm:text-base">$1,760</span>
+            </div>
+            <div class="flex items-center justify-between px-6 sm:px-8 py-4 hover:bg-white/5 transition-colors">
+              <span class="text-sm sm:text-base"><span class="text-white/50 mr-2">3.</span> Esterilización</span>
+              <span class="font-bold text-sm sm:text-base">$329</span>
+            </div>
+            <div class="flex items-center justify-between px-6 sm:px-8 py-4 hover:bg-white/5 transition-colors">
+              <span class="text-sm sm:text-base"><span class="text-white/50 mr-2">4.</span> Eutanasia</span>
+              <span class="font-bold text-sm sm:text-base">$329</span>
+            </div>
+            <div class="flex items-center justify-between px-6 sm:px-8 py-4 hover:bg-white/5 transition-colors">
+              <span class="text-sm sm:text-base"><span class="text-white/50 mr-2">5.</span> Sanción por perro extraviado en vía pública</span>
+              <span class="font-bold text-sm sm:text-base">$423</span>
+            </div>
+            <div class="flex items-center justify-between px-6 sm:px-8 py-4 hover:bg-white/5 transition-colors">
+              <span class="text-sm sm:text-base"><span class="text-white/50 mr-2">6.</span> Sanción por perro extraviado (reincidente)</span>
+              <span class="font-bold text-sm sm:text-base">$587</span>
+            </div>
+            <div class="flex items-center justify-between px-6 sm:px-8 py-4 hover:bg-white/5 transition-colors">
+              <span class="text-sm sm:text-base"><span class="text-white/50 mr-2">7.</span> Entrega voluntaria</span>
+              <span class="font-bold text-sm sm:text-base">$294</span>
+            </div>
+            <div class="flex items-center justify-between px-6 sm:px-8 py-4 hover:bg-white/5 transition-colors">
+              <span class="text-sm sm:text-base"><span class="text-white/50 mr-2">8.</span> Recolección de cuerpos en veterinarias</span>
+              <span class="font-bold text-sm sm:text-base">$118</span>
+            </div>
+            <div class="flex items-center justify-between px-6 sm:px-8 py-4 hover:bg-white/5 transition-colors">
+              <span class="text-sm sm:text-base"><span class="text-white/50 mr-2">9.</span> Mal manejo en cuidados postquirúrgicos</span>
+              <span class="font-bold text-sm sm:text-base">$235</span>
+            </div>
+            <div class="flex items-center justify-between px-6 sm:px-8 py-4 hover:bg-white/5 transition-colors">
+              <span class="text-sm sm:text-base"><span class="text-white/50 mr-2">10.</span> Movilidad, recolección y entrega</span>
+              <span class="font-bold text-sm sm:text-base">$118</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Image for Servicios -->
+        <div class="lg:col-span-4 space-y-4">
+          <div class="rounded-3xl overflow-hidden soft-card border border-black/5 bg-white">
+            <img
+              src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?auto=format&fit=crop&w=900&q=80"
+              onerror="this.onerror=null;this.src='https://placehold.co/600x720/E6DFD1/3B001E?text=Atenci%C3%B3n+Veterinaria';"
+              alt="Atención veterinaria en el Centro de Control Animal Caborca"
+              class="w-full h-80 lg:h-[460px] object-cover"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Effective date note under the fee table -->
+      <p class="mt-5 text-sm font-semibold text-forest">
+        Precios a partir del 4 de febrero del 2026.
+      </p>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       6. NOTICIAS Y CAMPAÑAS (#noticias)
+       Forest green section showcasing 3 upcoming campaigns
+  ========================================================== -->
+  <section id="noticias" class="bg-forest py-20 lg:py-24 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Section Header -->
+      <div class="mb-12">
+        <p class="text-xs font-bold tracking-[0.14em] uppercase text-white/75 mb-2">
+          NOTICIAS Y CAMPAÑAS
+        </p>
+        <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white">
+          Esterilización gratuita
+        </h2>
+      </div>
+
+      <!-- 3-column campaign cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Campaign Card 1 -->
+        <article class="bg-white text-ink rounded-3xl overflow-hidden soft-card flex flex-col">
+          <img
+            src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=800&q=80"
+            onerror="this.onerror=null;this.src='https://placehold.co/600x340/E6DFD1/265345?text=Campa%C3%B1a+Esterilizaci%C3%B3n';"
+            alt="Campaña de esterilización gratuita"
+            class="w-full h-44 object-cover"
+          />
+          <div class="p-7 flex-1 flex flex-col">
+            <div>
+              <span class="inline-block bg-maroon text-white text-xs font-semibold px-3.5 py-1 rounded-full mb-4">
+                Cupo limitado
+              </span>
+              <h3 class="font-serif text-2xl font-extrabold text-burgundy leading-snug mb-3">
+                Campaña de esterilización gratuita
+              </h3>
+              <p class="font-bold text-sm text-ink mb-1">Jueves 23 de abril</p>
+              <p class="text-sm text-ink/75 mb-4">Plaza Los Olivos · Turnos desde las 8:00 am</p>
+            </div>
+            <!-- mt-auto pushes requirements note to bottom so all 3 cards align cleanly -->
+            <p class="text-xs text-ink/65 leading-relaxed mt-auto">
+              Requisitos: ayuno de 12 h, libres de garrapatas, clínicamente sanos, no hembras gestantes, lactando o en celo.
+            </p>
+          </div>
+        </article>
+
+        <!-- Campaign Card 2 -->
+        <article class="bg-white text-ink rounded-3xl overflow-hidden soft-card flex flex-col">
+          <img
+            src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=800&q=80"
+            onerror="this.onerror=null;this.src='https://placehold.co/600x340/E6DFD1/265345?text=Unidad+M%C3%B3vil';"
+            alt="Unidad Móvil Veterinaria"
+            class="w-full h-44 object-cover"
+          />
+          <div class="p-7 flex-1 flex flex-col">
+            <div>
+              <span class="inline-block bg-maroon text-white text-xs font-semibold px-3.5 py-1 rounded-full mb-4">
+                Cupo limitado
+              </span>
+              <h3 class="font-serif text-2xl font-extrabold text-burgundy leading-snug mb-3">
+                Unidad Móvil Veterinaria
+              </h3>
+              <p class="font-bold text-sm text-ink mb-1">Sábado 18 de abril</p>
+              <p class="text-sm text-ink/75 mb-4">Ejido El Coyote · Turnos desde las 8:00 am</p>
+            </div>
+            <p class="text-xs text-ink/65 leading-relaxed mt-auto">
+              Requisitos: ayuno de 12 h, libres de garrapatas, clínicamente sanos, no hembras gestantes, lactando o en celo.
+            </p>
+          </div>
+        </article>
+
+        <!-- Campaign Card 3 -->
+        <article class="bg-white text-ink rounded-3xl overflow-hidden soft-card flex flex-col">
+          <img
+            src="https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=800&q=80"
+            onerror="this.onerror=null;this.src='https://placehold.co/600x340/E6DFD1/265345?text=Vacunaci%C3%B3n';"
+            alt="Vacunación y tratamiento contra garrapatas"
+            class="w-full h-44 object-cover"
+          />
+          <div class="p-7 flex-1 flex flex-col">
+            <div>
+              <span class="inline-block bg-maroon text-white text-xs font-semibold px-3.5 py-1 rounded-full mb-4">
+                Cupo limitado
+              </span>
+              <h3 class="font-serif text-2xl font-extrabold text-burgundy leading-snug mb-3">
+                Vacunación y tratamiento contra garrapatas
+              </h3>
+              <p class="font-bold text-sm text-ink mb-1">Viernes 17 de abril</p>
+              <p class="text-sm text-ink/75 mb-4">Unidad Deportiva “El Colilo” · Turnos desde las 8:00 am</p>
+            </div>
+            <p class="text-xs text-ink/65 leading-relaxed mt-auto">
+              Requisitos: ayuno de 12 h, libres de garrapatas, clínicamente sanos, no hembras gestantes, lactando o en celo.
+            </p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       7. DONA (#dona)
+       Maroon donation card with clickable tiers & photo
+  ========================================================== -->
+  <section id="dona" class="bg-cream py-20 lg:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-maroon rounded-3xl p-8 sm:p-12 lg:p-14 text-white soft-card">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <!-- Left / Main Content: title, description, selectable tiers, CTA -->
+          <div class="lg:col-span-8">
+            <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-3">
+              Tu ayuda alimenta esperanza
+            </h2>
+            <p class="text-white/90 text-base sm:text-lg mb-8">
+              Aceptamos croquetas, cobijas, medicamentos y donativos económicos.
+            </p>
+
+            <!-- 3 Interactive White Tier Cards (data-* attributes store amount & description for JS) -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+              <button
+                type="button"
+                data-amount="$100"
+                data-desc="Una semana de alimento"
+                class="tier-card bg-white text-left rounded-2xl p-6 transition-all hover:shadow-lg focus:outline-none"
+              >
+                <div class="font-serif text-3xl font-extrabold text-maroon mb-1">$100</div>
+                <div class="text-xs sm:text-sm font-medium text-ink">Una semana de alimento</div>
+              </button>
+
+              <button
+                type="button"
+                data-amount="$329"
+                data-desc="Una esterilización"
+                class="tier-card bg-white text-left rounded-2xl p-6 transition-all hover:shadow-lg focus:outline-none"
+              >
+                <div class="font-serif text-3xl font-extrabold text-maroon mb-1">$329</div>
+                <div class="text-xs sm:text-sm font-medium text-ink">Una esterilización</div>
+              </button>
+
+              <button
+                type="button"
+                data-amount="$500"
+                data-desc="Vacunas para 5 perros"
+                class="tier-card bg-white text-left rounded-2xl p-6 transition-all hover:shadow-lg focus:outline-none"
+              >
+                <div class="font-serif text-3xl font-extrabold text-maroon mb-1">$500</div>
+                <div class="text-xs sm:text-sm font-medium text-ink">Vacunas para 5 perros</div>
+              </button>
+            </div>
+
+            <!-- Donate button + status text -->
+            <div class="flex flex-wrap items-center gap-4">
+              <button
+                id="donateActionBtn"
+                type="button"
+                class="bg-burgundy hover:bg-black/40 text-white font-semibold px-8 py-3.5 rounded-full transition-colors shadow-md"
+              >
+                Quiero donar
+              </button>
+              <span id="donateFeedback" class="text-sm text-white/90 hidden"></span>
+            </div>
+          </div>
+
+          <!-- Right Side: Donation photo -->
+          <div class="lg:col-span-4">
+            <div class="rounded-2xl overflow-hidden border-2 border-white/20 bg-white/10">
+              <img
+                src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=900&q=80"
+                onerror="this.onerror=null;this.src='https://placehold.co/600x600/5E002E/FFFFFF?text=Donativos+%2F+Croquetas';"
+                alt="Donativos de croquetas y apoyo para el refugio"
+                class="w-full h-64 lg:h-72 object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       8. CONTACTO (#contacto)
+       Contact details, center photo, and interactive message form
+  ========================================================== -->
+  <section id="contacto" class="bg-creamDark py-20 lg:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- Left Column: Location/hours/phone + facility photo -->
+        <div class="lg:col-span-5 space-y-6">
+          <div>
+            <p class="text-xs font-bold tracking-[0.14em] uppercase text-maroon mb-2">
+              CONTACTO
+            </p>
+            <h2 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-extrabold text-forest mb-6">
+              Visítanos
+            </h2>
+
+            <!-- Contact details list -->
+            <ul class="space-y-4 text-ink text-base">
+              <li class="flex items-center gap-3">
+                <span class="text-maroon text-lg" aria-hidden="true">📍</span>
+                <span>Caborca, Sonora, México</span>
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="text-maroon text-lg" aria-hidden="true">📞</span>
+                <a href="tel:6373720000" class="hover:text-maroon transition-colors">(637) 372-0000</a>
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="text-ink/70 text-lg" aria-hidden="true">🕒</span>
+                <span>Lunes a viernes, 8:00 am – 3:00 pm</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Image card for Contacto -->
+          <div class="rounded-2xl overflow-hidden soft-card border border-black/5 bg-white">
+            <img
+              src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=900&q=80"
+              onerror="this.onerror=null;this.src='https://placehold.co/650x360/FAF6EE/265345?text=Instalaciones+del+Centro';"
+              alt="Instalaciones del Centro de Control Animal Caborca"
+              class="w-full h-48 object-cover"
+            />
+          </div>
+        </div>
+
+        <!-- Right Column: White rounded contact form card -->
+        <div class="lg:col-span-7">
+          <form id="contactForm" class="bg-white rounded-3xl p-6 sm:p-10 soft-card space-y-5">
+            <!-- Name input -->
+            <div>
+              <label for="contactName" class="sr-only">Nombre</label>
+              <input
+                id="contactName"
+                type="text"
+                required
+                placeholder="Nombre"
+                class="w-full bg-cream border border-black/10 rounded-full px-6 py-3.5 text-ink placeholder-ink/50 focus:outline-none focus:ring-2 focus:ring-forest"
+              />
+            </div>
+
+            <!-- Phone input -->
+            <div>
+              <label for="contactPhone" class="sr-only">Teléfono</label>
+              <input
+                id="contactPhone"
+                type="tel"
+                required
+                placeholder="Teléfono"
+                class="w-full bg-cream border border-black/10 rounded-full px-6 py-3.5 text-ink placeholder-ink/50 focus:outline-none focus:ring-2 focus:ring-forest"
+              />
+            </div>
+
+            <!-- Message textarea (also pre-filled when clicking Adoptar or Quiero donar) -->
+            <div>
+              <label for="contactMessage" class="sr-only">Mensaje</label>
+              <textarea
+                id="contactMessage"
+                rows="4"
+                required
+                placeholder="¿Te interesa adoptar, donar o reportar?"
+                class="w-full bg-cream border border-black/10 rounded-2xl px-6 py-4 text-ink placeholder-ink/50 focus:outline-none focus:ring-2 focus:ring-forest resize-y"
+              ></textarea>
+            </div>
+
+            <!-- Submit button -->
+            <button
+              type="submit"
+              class="w-full bg-forest hover:bg-forestDark text-white font-semibold py-4 rounded-full transition-colors shadow-md"
+            >
+              Enviar mensaje
+            </button>
+
+            <!-- Confirmation message container shown after form submission -->
+            <div id="contactFeedback" class="hidden rounded-2xl p-4 text-sm font-medium text-center"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       9. MAP SECTION (Heroica Caborca, Sonora, Mexico)
+       Embedded interactive OpenStreetMap centered on Caborca
+  ========================================================== -->
+  <section class="bg-creamDark pb-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="rounded-3xl overflow-hidden soft-card border border-black/10 bg-white">
+        <!-- iframe embeds OpenStreetMap; loading="lazy" defers loading until near viewport -->
+        <iframe
+          title="Mapa de Heroica Caborca, Sonora"
+          src="https://www.openstreetmap.org/export/embed.html?bbox=-112.1983%2C30.6867%2C-112.1183%2C30.7467&amp;layer=mapnik&amp;marker=30.7167%2C-112.1583"
+          class="w-full h-80 sm:h-96 border-0"
+          loading="lazy"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       10. FOOTER
+       Municipal credits, quick links, social buttons & copyright
+  ========================================================== -->
+  <footer class="bg-burgundy text-white py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Top footer row: left brand info, right navigation + social icons -->
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 pb-10 border-b border-white/10">
+        <!-- Left Branding -->
+        <div>
+          <h3 class="font-serif text-2xl font-extrabold mb-1">
+            Centro de Control Animal Caborca
+          </h3>
+          <p class="text-white/75 text-sm">
+            H. Ayuntamiento de Caborca · Piensa en Grande 2024–2027
+          </p>
+        </div>
+
+        <!-- Right Nav Links & Social Icons -->
+        <div class="flex flex-col md:items-end gap-5">
+          <!-- Footer anchor links -->
+          <nav class="flex flex-wrap gap-6 text-sm font-medium text-white/90">
+            <a href="#nosotros" class="hover:text-white transition-colors">Nosotros</a>
+            <a href="#adopta" class="hover:text-white transition-colors">Adopta</a>
+            <a href="#servicios" class="hover:text-white transition-colors">Servicios</a>
+            <a href="#noticias" class="hover:text-white transition-colors">Noticias</a>
+            <a href="#dona" class="hover:text-white transition-colors">Dona</a>
+            <a href="#contacto" class="hover:text-white transition-colors">Contacto</a>
+          </nav>
+
+          <!-- Circular Social Media Buttons (update href="#" with real profile/WhatsApp links) -->
+          <div class="flex items-center gap-3">
+            <!-- Facebook icon button -->
+            <a
+              href="#"
+              aria-label="Facebook"
+              class="w-10 h-10 rounded-full bg-maroon hover:bg-maroonDark flex items-center justify-center transition-colors"
+            >
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
+              </svg>
+            </a>
+            <!-- Instagram icon button -->
+            <a
+              href="#"
+              aria-label="Instagram"
+              class="w-10 h-10 rounded-full bg-maroon hover:bg-maroonDark flex items-center justify-center transition-colors"
+            >
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+            </a>
+            <!-- WhatsApp icon button -->
+            <a
+              href="#"
+              aria-label="WhatsApp"
+              class="w-10 h-10 rounded-full bg-maroon hover:bg-maroonDark flex items-center justify-center transition-colors"
+            >
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.766.469 3.484 1.344 5l-1.406 5.156 5.281-1.375c1.469.797 3.109 1.219 4.75 1.219 5.516 0 9.969-4.453 9.969-9.969S17.547 2 12.031 2zm5.813 14.125c-.25.703-1.438 1.344-2 1.422-.516.078-1.172.109-1.891-.125-.438-.141-1-.328-1.719-.641-3-1.297-4.953-4.328-5.109-4.531-.156-.203-1.219-1.625-1.219-3.094 0-1.469.766-2.188 1.047-2.484.281-.297.609-.375.813-.375.203 0 .406.016.578.016.188 0 .438-.078.688.516.25.609.859 2.094.938 2.25.078.156.125.344.016.547-.109.203-.156.328-.313.516-.156.188-.328.406-.469.547-.156.156-.313.328-.141.625.172.297.766 1.266 1.641 2.047 1.125 1 2.078 1.313 2.375 1.469.297.156.469.125.641-.078.172-.203.734-.859.938-1.156.203-.297.406-.25.672-.156.266.094 1.703.797 2 .953.297.156.484.234.563.359.078.125.078.734-.172 1.438z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom copyright line -->
+      <div class="pt-8 text-xs text-white/65">
+        © 2026 Centro de Control Animal Caborca, Sonora.
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================
+       JAVASCRIPT: MOBILE MENU, 12 DOGS GALLERY, DONATION & FORM
+  ========================================================== -->
+  <script>
+    // 1. Mobile Menu Toggle: grab button, dropdown container, and all mobile nav links
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+
+    // Toggle 'hidden' class when the hamburger button is clicked on mobile
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Automatically close the mobile menu after tapping any section link
+    mobileLinks.forEach((link) => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+      });
+    });
+
+    // Helper function: if an image fails to load, swap to a labeled placeholder image
+    function handleImgError(img, dogName) {
+      img.onerror = null; // Prevent infinite loop if fallback also fails
+      img.src = 'https://placehold.co/600x500/E6DFD1/265345?text=Foto+de+' + encodeURIComponent(dogName);
+    }
+
+    // 2. Adoption Data Array (12 dogs): add/edit/remove objects here to update the gallery
+    const dogs = [
+      {
+        name: 'Manchas', // Dog's name shown on card & button
+        trait: 'Juguetón', // Personality pill badge
+        details: 'Macho · 2 años · Mediano', // Sex, age, and size summary
+        img: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=700&q=80', // Photo URL
+      },
+      {
+        name: 'Canela',
+        trait: 'Cariñosa',
+        details: 'Hembra · 3 años · Mediana',
+        img: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=700&q=80',
+      },
+      {
+        name: 'Nube',
+        trait: 'Tranquila',
+        details: 'Hembra · 4 años · Grande',
+        img: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=700&q=80',
+      },
+      {
+        name: 'Toby',
+        trait: 'Leal',
+        details: 'Macho · 1 año · Pequeño',
+        img: 'https://images.unsplash.com/photo-1588943211346-0908a1fb0b01?auto=format&fit=crop&w=700&q=80',
+      },
+      {
+        name: 'Luna',
+        trait: 'Dulce',
+        details: 'Hembra · 2 años · Mediana',
+        img: 'https://images.unsplash.com/photo-1561037404-61cd46aa615b?auto=format&fit=crop&w=700&q=80',
+      },
+      {
+        name: 'Rocky',
+        trait: 'Activo',
+        details: 'Macho · 3 años · Grande',
+        img: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=700&q=80',
+      },
+      {
+        name: 'Sol',
+        trait: 'Alegre',
+        details: 'Hembra · 1 año · Pequeña',
+        img: 'https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?auto=format&fit=crop&w=700&q=80',
+      },
+      {
+        name: 'Coco',
+        trait: 'Sociable',
+        details: 'Macho · 4 años · Mediano',
+        img: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=700&q=80',
+      },
+      {
+        name: 'Max',
+        trait: 'Protector',
+        details: 'Macho · 5 años · Grande',
+        img: 'https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?auto=format&fit=crop&w=700&q=80',
+      },
+      {
+        name: 'Kira',
+        trait: 'Curiosa',
+        details: 'Hembra · 2 años · Mediana',
+        img: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=crop&w=700&q=80',
+      },
+      {
+        name: 'Bruno',
+        trait: 'Noble',
+        details: 'Macho · 3 años · Grande',
+        img: 'https://images.unsplash.com/photo-1534361960057-19889db9621e?auto=format&fit=crop&w=700&q=80',
+      },
+      {
+        name: 'Chispa',
+        trait: 'Energética',
+        details: 'Hembra · 1 año · Pequeña',
+        img: 'https://images.unsplash.com/photo-1575859431774-2e57ed632664?auto=format&fit=crop&w=700&q=80',
+      },
+    ];
+
+    // Reference the grid container where dog cards will be placed
+    const dogsGrid = document.getElementById('dogsGrid');
+
+    // Loop through each dog object and create a styled card element
+    dogs.forEach((dog) => {
+      const card = document.createElement('article');
+      card.className = 'bg-white rounded-3xl overflow-hidden soft-card border border-black/5 flex flex-col transition-transform hover:-translate-y-1';
+      card.innerHTML = `
+        <img
+          src="${dog.img}"
+          onerror="this.onerror=null;this.src='https://placehold.co/600x500/E6DFD1/265345?text=Foto+de+${encodeURIComponent(dog.name)}';"
+          alt="Foto de ${dog.name}"
+          class="w-full h-72 object-cover"
+        />
+        <div class="p-6 flex-1 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-1">
+              <h3 class="font-serif text-2xl font-extrabold text-burgundy">${dog.name}</h3>
+              <span class="bg-maroon text-white text-xs font-semibold px-3 py-1 rounded-full">
+                ${dog.trait}
+              </span>
+            </div>
+            <p class="text-sm text-ink/70 mb-5">${dog.details}</p>
+          </div>
+          <button
+            type="button"
+            onclick="adoptDog('${dog.name}')"
+            class="w-full bg-forest hover:bg-forestDark text-white font-semibold py-3 rounded-full transition-colors"
+          >
+            Adoptar a ${dog.name}
+          </button>
+        </div>
+      `;
+      dogsGrid.appendChild(card);
+    });
+
+    // 3. Adopt Button -> Smooth scroll to contact form and pre-fill message with dog's name
+    window.adoptDog = function (dogName) {
+      const contactSection = document.getElementById('contacto');
+      const messageInput = document.getElementById('contactMessage');
+      const nameInput = document.getElementById('contactName');
+
+      // Pre-fill textarea so the user doesn't have to type the dog's name from scratch
+      messageInput.value = `Hola, me interesa adoptar a ${dogName}. ¿Podrían darme más información sobre el proceso?`;
+      // Smoothly scroll down to the contact section
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+      // Focus the Name field shortly after scrolling starts
+      setTimeout(() => nameInput.focus(), 600);
+    };
+
+    // 4. Interactive Donation Tier Selection
+    const tierCards = document.querySelectorAll('.tier-card');
+    const donateActionBtn = document.getElementById('donateActionBtn');
+    const donateFeedback = document.getElementById('donateFeedback');
+    let selectedTier = null; // Stores whichever tier card the user clicked
+
+    // Allow clicking a donation tier card to highlight it and save its amount/description
+    tierCards.forEach((card) => {
+      card.addEventListener('click', () => {
+        tierCards.forEach((c) => c.classList.remove('selected')); // Clear previous selection
+        card.classList.add('selected'); // Highlight clicked card
+        selectedTier = {
+          amount: card.dataset.amount,
+          desc: card.dataset.desc,
+        };
+        donateFeedback.classList.add('hidden');
+      });
+    });
+
+    // When "Quiero donar" is clicked, pre-fill the contact form and scroll to it
+    donateActionBtn.addEventListener('click', () => {
+      const contactSection = document.getElementById('contacto');
+      const messageInput = document.getElementById('contactMessage');
+
+      if (selectedTier) {
+        messageInput.value = `Hola, quiero realizar un donativo de ${selectedTier.amount} (${selectedTier.desc}).`;
+      } else {
+        messageInput.value = `Hola, me gustaría recibir información para hacer un donativo al centro.`;
+      }
+
+      donateFeedback.textContent = 'Redirigiendo al formulario de contacto...';
+      donateFeedback.classList.remove('hidden');
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // 5. Contact Form Submission Feedback (prevents page reload and shows confirmation)
+    const contactForm = document.getElementById('contactForm');
+    const contactFeedback = document.getElementById('contactFeedback');
+
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault(); // Stop browser from refreshing the page on submit
+      const name = document.getElementById('contactName').value.trim();
+
+      contactFeedback.textContent = `¡Gracias, ${name}! Tu mensaje ha sido enviado. Nos pondremos en contacto contigo pronto.`;
+      contactFeedback.className = 'rounded-2xl p-4 text-sm font-medium text-center bg-forest/10 text-forest border border-forest/20';
+      contactFeedback.classList.remove('hidden');
+
+      contactForm.reset(); // Clear form fields after submission
+    });
+  </script>
+</body>
+</html>
